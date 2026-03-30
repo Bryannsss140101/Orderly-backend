@@ -8,4 +8,8 @@ public class DuplicateResourceException extends BaseException {
     public DuplicateResourceException(String message) {
         super(message);
     }
+
+    public DuplicateResourceException(String format, Object... args) {
+        super(String.format(format, args));
+    }
 }

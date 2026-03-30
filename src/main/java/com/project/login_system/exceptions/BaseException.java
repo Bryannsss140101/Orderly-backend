@@ -5,6 +5,10 @@ public abstract class BaseException extends RuntimeException {
         super(message);
     }
 
+    protected BaseException(String format, Object... args) {
+        super(String.format(format, args));
+    }
+
     protected BaseException(String message, Throwable cause) {
         super(message, cause);
     }

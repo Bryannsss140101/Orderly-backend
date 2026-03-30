@@ -26,14 +26,14 @@ public class UserService {
 
     public UserResponseDto getById(Long id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit %d", id));
 
         return modelMapper.map(user, UserResponseDto.class);
     }
 
     public UserResponseDto getByUsername(String username) {
         var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit username: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit %s", username));
 
         return modelMapper.map(user, UserResponseDto.class);
     }
@@ -47,10 +47,10 @@ public class UserService {
 
     public UserResponseDto create(RegisterRequestDto requestDto) {
         if (userRepository.existsByUsername(requestDto.getUsername()))
-            throw new DuplicateResourceException("Username already in use: " + requestDto.getUsername());
+            throw new DuplicateResourceException("%s already exists", requestDto.getUsername());
 
         if (userRepository.existsByEmail(requestDto.getEmail()))
-            throw new DuplicateResourceException("Email already in use: " + requestDto.getEmail());
+            throw new DuplicateResourceException("%s already exists", requestDto.getEmail());
 
         var user = modelMapper.map(requestDto, User.class);
 
@@ -62,13 +62,13 @@ public class UserService {
 
     public UserResponseDto updateUsername(Long id, UpdateUsernameDto usernameDto) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit %d", id));
 
         var username = usernameDto.getUsername();
 
         if (!user.getUsername().equals(username) &&
                 userRepository.existsByUsername(username))
-            throw new DuplicateResourceException("Username already in use: " + username);
+            throw new DuplicateResourceException("%s already exists", username);
 
         user.setUsername(username);
 
@@ -78,13 +78,13 @@ public class UserService {
 
     public UserResponseDto updateEmail(Long id, UpdateEmailDto emailDto) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit %d", id));
 
         var email = emailDto.getEmail();
 
         if (!user.getEmail().equals(email) &&
                 userRepository.existsByEmail(email))
-            throw new DuplicateResourceException("Email already in use: " + email);
+            throw new DuplicateResourceException("%s already exists", email);
 
         user.setEmail(email);
 
@@ -94,7 +94,7 @@ public class UserService {
 
     public UserResponseDto updatePassword(Long id, UpdatePasswordDto passwordDto) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit %d", id));
 
         user.setPassword(passwordDto.getPassword());
 
@@ -104,15 +104,15 @@ public class UserService {
 
     public UserResponseDto update(Long id, RegisterRequestDto requestDto) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit %d", id));
 
         if (!user.getEmail().equals(requestDto.getEmail()) &&
                 userRepository.existsByEmail(requestDto.getEmail()))
-            throw new DuplicateResourceException("Email already in use");
+            throw new DuplicateResourceException("%s already exists", requestDto.getEmail());
 
         if (!user.getUsername().equals(requestDto.getUsername()) &&
                 userRepository.existsByUsername(requestDto.getUsername()))
-            throw new DuplicateResourceException("Username already in use");
+            throw new DuplicateResourceException("%s already exist", requestDto.getUsername());
 
         user.setFirstName(requestDto.getFirstName());
         user.setLastName(requestDto.getLastName());
@@ -128,14 +128,14 @@ public class UserService {
 
     public void deleteById(Long id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit %d", id));
 
         userRepository.delete(user);
     }
 
     public void deleteByUsername(String username) {
         var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit username: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found whit %d", username));
 
         userRepository.delete(user);
     }
