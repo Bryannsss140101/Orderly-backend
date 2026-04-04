@@ -3,8 +3,7 @@ package com.project.login_system.user.dto;
 import lombok.Data;
 
 @Data
-public class UserResponseDto {
-    private Long id;
+public class UserUpdateDto {
     private String firstName;
     private String lastName;
     private String username;

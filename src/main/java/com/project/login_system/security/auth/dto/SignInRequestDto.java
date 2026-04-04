@@ -1,12 +1,12 @@
-package com.project.login_system.user.dto;
+package com.project.login_system.security.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class LoginRequestDto {
+public class SignInRequestDto {
     @NotBlank
-    private String usernameOrEmail;
+    private String identifier;
 
     @NotBlank
     private String password;

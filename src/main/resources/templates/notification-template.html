@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cuenta creada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 22px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .info {
+            background: #f9f9f9;
+            padding: 10px;
+            border-left: 4px solid #007BFF;
+            margin: 20px 0;
+        }
+
+        .info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info li {
+            margin-bottom: 8px;
+        }
+
+        .cta {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .cta a {
+            padding: 10px 20px;
+            background: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .cta a:hover {
+            background: #0056b3;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>¡Cuenta creada!</h1>
+        <p>Hola [[${firstName}]], tu cuenta ha sido creada exitosamente.</p>
+
+        <div class="info">
+            <h2>Detalles de tu cuenta:</h2>
+            <ul>
+                <li><strong>Nombre completo:</strong> [[${firstName}]] [[${lastName}]]</li>
+                <li><strong>Nombre de usuario:</strong> [[${username}]]</li>
+                <li><strong>Email:</strong> [[${email}]]</li>
+            </ul>
+        </div>
+
+        <div class="cta">
+            <a href="https://tu-sitio.com/login">Iniciar sesión</a>
+        </div>
+
+        <div class="footer">
+            <p>Este es un mensaje automático. No respondas a este correo.</p>
+        </div>
+    </div>
+</body>
+
+</html>
