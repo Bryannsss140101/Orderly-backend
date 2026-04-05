@@ -9,12 +9,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.project.login_system.user.domain.UserService;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
+    private final UserService userDetails;
 
     @Override
     protected void doFilterInternal(
@@ -29,26 +32,24 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = extractToken(request);
+            var token = extractToken(request);
 
             if (token != null && jwtService.isTokenValid(token) && jwtService.isAccessToken(token)) {
-                String username = jwtService.extractUsername(token);
+                var username = jwtService.extractUsername(token);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-                    var authorities = jwtService.extractAuthorities(token);
+                    var loadedUser = userDetails.loadUserByUsername(username);
 
                     var authToken = new UsernamePasswordAuthenticationToken(
-                            username,
+                            loadedUser,
                             null,
-                            authorities);
+                            loadedUser.getAuthorities());
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-
         } catch (Exception e) {
             log.error("JWT authentication error: {}", e.getMessage());
         }

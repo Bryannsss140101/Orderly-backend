@@ -37,7 +37,10 @@ public class JwtService {
         Map<String, Object> extraClaims = new HashMap<>();
 
         extraClaims.put("roles", userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
+                .map(role -> {
+                    var auth = role.getAuthority();
+                    return auth.startsWith("ROLE_") ? auth : "ROLE_" + auth;
+                })
                 .toList());
 
         extraClaims.put("type", "access");
@@ -105,6 +108,7 @@ public class JwtService {
             return List.of();
 
         return roles.stream()
+                .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
                 .map(org.springframework.security.core.authority.SimpleGrantedAuthority::new)
                 .toList();
     }

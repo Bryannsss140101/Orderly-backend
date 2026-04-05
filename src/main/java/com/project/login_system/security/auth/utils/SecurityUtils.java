@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import com.project.login_system.security.auth.domain.CustomUserDetails;
 
+import lombok.var;
+
 @Component("securityUtils")
 public final class SecurityUtils {
     public CustomUserDetails getCurrentUser() {
@@ -14,20 +16,22 @@ public final class SecurityUtils {
         if (authentication == null || !authentication.isAuthenticated())
             throw new RuntimeException("User not authenticated");
 
-        Object principal = authentication.getPrincipal();
+        var principal = authentication.getPrincipal();
 
-        if (!(principal instanceof CustomUserDetails user))
-            throw new RuntimeException("Invalid user principal");
+        if (!(principal instanceof CustomUserDetails))
+            return null;
 
-        return user;
+        return (CustomUserDetails) principal;
     }
 
     public Long getCurrentUserId() {
-        return getCurrentUser().getId();
+        var user = getCurrentUser();
+        return user != null ? user.getId() : null;
     }
 
     public String getCurrentUsername() {
-        return getCurrentUser().getUsername();
+        var user = getCurrentUser();
+        return user != null ? user.getUsername() : null;
     }
 
     public boolean hasRole(String role) {
@@ -52,7 +56,10 @@ public final class SecurityUtils {
     }
 
     public boolean isCurrentUser(Long userId) {
-        return userId != null && userId.equals(getCurrentUserId());
+        Long currentUserId = getCurrentUserId();
+        if (currentUserId == null)
+            return false;
+        return currentUserId.equals(userId);
     }
 
     public boolean isCurrentUserOrAdmin(Long userId) {
