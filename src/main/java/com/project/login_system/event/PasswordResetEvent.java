@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class UserRegisterEvent {
-    private final String firstName;
-    private final String lastName;
-    private final String username;
+public class PasswordResetEvent {
     private final String email;
+    private final String name;
+    private final String link;
 }

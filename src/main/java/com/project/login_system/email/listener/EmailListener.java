@@ -8,6 +8,7 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.project.login_system.email.service.EmailService;
+import com.project.login_system.event.PasswordResetEvent;
 import com.project.login_system.event.UserRegisterEvent;
 
 import lombok.RequiredArgsConstructor;
@@ -20,19 +21,26 @@ public class EmailListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleUserRegister(UserRegisterEvent event) {
-        var user = event.getUser();
-
         var templateModel = new HashMap<String, Object>();
-        templateModel.put("firstName", user.getFirstName());
-        templateModel.put("lastName", user.getLastName());
-        templateModel.put("username", user.getUsername());
-        templateModel.put("email", user.getEmail());
+        templateModel.put("firstName", event.getFirstName());
+        templateModel.put("lastName", event.getLastName());
+        templateModel.put("username", event.getUsername());
+        templateModel.put("email", event.getEmail());
 
         emailService.sendEmail(
-                user.getEmail(),
-                buildSubject(user.getFirstName()),
+                event.getEmail(),
+                buildSubject(event.getFirstName()),
                 "notification-template",
                 templateModel);
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handlePasswordReset(PasswordResetEvent event) {
+        emailService.sendPasswordResetEmail(
+                event.getEmail(),
+                event.getName(),
+                event.getLink());
     }
 
     private String buildSubject(String firstName) {

@@ -1,6 +1,7 @@
 package com.project.login_system.security.auth.domain;
 
 import com.project.login_system.email.service.EmailService;
+import com.project.login_system.event.PasswordResetEvent;
 import com.project.login_system.event.UserRegisterEvent;
 import com.project.login_system.security.auth.infrastructure.PasswordResetTokenRepository;
 import java.time.LocalDateTime;
@@ -38,8 +39,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final EmailService emailService;
-
+    
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
@@ -61,6 +61,13 @@ public class AuthService {
                 .build();
 
         var savedUser = userRepository.save(user);
+
+        applicationEventPublisher.publishEvent(
+                new UserRegisterEvent(
+                        savedUser.getFirstName(),
+                        savedUser.getLastName(),
+                        savedUser.getUsername(),
+                        savedUser.getEmail()));
 
         return buildAuthResponse(savedUser);
     }
@@ -115,8 +122,11 @@ public class AuthService {
 
         var link = frontendUrl + "/reset-password?token=" + token;
 
-        emailService.sendPasswordResetEmail(
-                user.getEmail(), user.getFirstName(), link);
+        applicationEventPublisher.publishEvent(
+                new PasswordResetEvent(
+                        user.getEmail(),
+                        user.getFirstName(),
+                        link));
     }
 
     @Transactional
@@ -136,9 +146,6 @@ public class AuthService {
     }
 
     private AuthResponseDto buildAuthResponse(User user) {
-        applicationEventPublisher.publishEvent(
-                new UserRegisterEvent(this, user));
-
         var token = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 

@@ -21,53 +21,52 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/auth")
 public class AuthController {
-    private final AuthService authService;
+        private final AuthService authService;
 
-    public record GoogleSignInRequest(String token) {
-    }
+        public record GoogleSignInRequest(String token) {
+        }
 
-    public record ForgotPasswordRequest(String email) {
-    }
+        public record ForgotPasswordRequest(String email) {
+        }
 
-    public record MessageResponse(String message) {
-    }
+        public record MessageResponse(String message) {
+        }
 
-    @PostMapping("/signup")
-    public ResponseEntity<AuthResponseDto> signUp(
-            @Valid @RequestBody SignUpRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(authService.register(requestDto));
-    }
+        @PostMapping("/signup")
+        public ResponseEntity<AuthResponseDto> signUp(
+                        @Valid @RequestBody SignUpRequestDto requestDto) {
+                return ResponseEntity.status(HttpStatus.CREATED)
+                                .body(authService.register(requestDto));
+        }
 
-    @PostMapping("/signin")
-    public ResponseEntity<AuthResponseDto> signIn(
-            @Valid @RequestBody SignInRequestDto requestDto) {
-        return ResponseEntity.ok(authService.login(requestDto));
-    }
+        @PostMapping("/signin")
+        public ResponseEntity<AuthResponseDto> signIn(
+                        @Valid @RequestBody SignInRequestDto requestDto) {
+                return ResponseEntity.ok(authService.login(requestDto));
+        }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthResponseDto> refreshToken(
-            @Valid @RequestBody RefreshTokenRequestDto requestDto) {
-        return ResponseEntity.ok(authService.refreshToken(requestDto));
-    }
+        @PostMapping("/refresh")
+        public ResponseEntity<AuthResponseDto> refreshToken(
+                        @Valid @RequestBody RefreshTokenRequestDto requestDto) {
+                return ResponseEntity.ok(authService.refreshToken(requestDto));
+        }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<MessageResponse> forgotPassword(
-            @RequestBody @Valid ForgotPasswordRequest request) {
-        authService.requestPasswordReset(request.email());
-        return ResponseEntity.ok(
-                new MessageResponse("Recovery email sent"));
-    }
+        @PostMapping("/forgot-password")
+        public ResponseEntity<MessageResponse> forgotPassword(
+                        @RequestBody @Valid ForgotPasswordRequest request) {
+                authService.requestPasswordReset(request.email());
+                return ResponseEntity.ok(
+                                new MessageResponse("Recovery email sent"));
+        }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<MessageResponse> resetPassword(
-            @RequestBody @Valid ResetPasswordRequestDto requestDto) {
+        @PostMapping("/reset-password")
+        public ResponseEntity<MessageResponse> resetPassword(
+                        @RequestBody @Valid ResetPasswordRequestDto requestDto) {
+                authService.resetPassword(
+                                requestDto.getToken(),
+                                requestDto.getNewPassword());
 
-        authService.resetPassword(
-                requestDto.getToken(),
-                requestDto.getNewPassword());
-
-        return ResponseEntity.ok(
-                new MessageResponse("Contraseña actualizada correctamente"));
-    }
+                return ResponseEntity.ok(
+                                new MessageResponse("Password updated successfully"));
+        }
 }
