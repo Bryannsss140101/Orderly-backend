@@ -1,6 +1,5 @@
 package com.project.login_system.security.auth.domain;
 
-import com.project.login_system.email.service.EmailService;
 import com.project.login_system.event.PasswordResetEvent;
 import com.project.login_system.event.UserRegisterEvent;
 import com.project.login_system.security.auth.infrastructure.PasswordResetTokenRepository;
