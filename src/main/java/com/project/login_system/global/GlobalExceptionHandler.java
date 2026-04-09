@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateResourceException(
-            ResourceNotFoundException ex, HttpServletRequest request) {
+            DuplicateResourceException ex, HttpServletRequest request) {
         var status = HttpStatus.CONFLICT;
         var error = new ErrorResponse(
                 LocalDateTime.now(),
