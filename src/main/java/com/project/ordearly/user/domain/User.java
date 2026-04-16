@@ -3,9 +3,11 @@ package com.project.ordearly.user.domain;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.List;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.project.ordearly.security.auth.domain.CustomUserDetails;
 
@@ -36,19 +38,19 @@ public class User implements CustomUserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_name", nullable = false, length = 100)
-    private String fullName;
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String firstName;
 
-    @Column(nullable = false, unique = true, length = 8)
-    private String dni;
+    @Column(name = "last_name", nullable = false, length = 100)
+    private String lastName;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
     private LocalDate birthdate;
 
-    @Column(name = "photo_url", length = 255)
+    @Column(name = "photo_url")
     private String photoUrl;
 
     @Enumerated(EnumType.STRING)
@@ -61,13 +63,13 @@ public class User implements CustomUserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private ZonedDateTime createdAt;
 
-    @Column
+    @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
 
     @PrePersist
@@ -78,8 +80,7 @@ public class User implements CustomUserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
