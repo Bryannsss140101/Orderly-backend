@@ -57,6 +57,10 @@ public class JwtService {
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
+    public boolean isAccessToken(String token) {
+        return "access".equals(extractAllClaims(token).get("type", String.class));
+    }
+
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }

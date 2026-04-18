@@ -2,6 +2,7 @@ package com.project.ordearly.security.auth.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Email;
@@ -34,6 +35,7 @@ public class RegisterRequestDto {
     private String address;
 
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
     @JsonProperty("photo_url")
