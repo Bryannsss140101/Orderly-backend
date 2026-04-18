@@ -23,12 +23,12 @@ import lombok.Setter;
 public class RegisterRequestDto {
     @JsonProperty("first_name")
     @NotBlank
-    @Size(max = 100)
+    @Size(min = 2, max = 100)
     private String firstName;
 
     @JsonProperty("last_name")
     @NotBlank
-    @Size(max = 100)
+    @Size(min = 2, max = 100)
     private String lastName;
 
     @NotBlank
@@ -50,6 +50,6 @@ public class RegisterRequestDto {
     private String email;
 
     @NotBlank
-    @Size(min = 6)
+    @Size(min = 6, max = 100)
     private String password;
 }
