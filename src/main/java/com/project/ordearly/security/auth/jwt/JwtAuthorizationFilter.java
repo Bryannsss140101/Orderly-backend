@@ -71,6 +71,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getServletPath().startsWith("/api/v1/auth/");
+    }
+
     private String extractToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
 
