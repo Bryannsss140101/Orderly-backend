@@ -5,9 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDate;
 import java.util.Set;
 
-import org.junit.Test;
-import org.junit.Before;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.project.ordearly.security.auth.dto.RegisterRequestDto;
@@ -15,11 +14,10 @@ import com.project.ordearly.security.auth.dto.RegisterRequestDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
-@SpringBootTest
 public class RegisterRequestDtoValidationTest {
     private Validator validator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         var localValidatorFactoryBean = new LocalValidatorFactoryBean();
         localValidatorFactoryBean.afterPropertiesSet();
@@ -168,16 +166,15 @@ public class RegisterRequestDtoValidationTest {
     }
 
     private RegisterRequestDto createValidDto() {
-        var dto = new RegisterRequestDto();
-        dto.setFirstName("John");
-        dto.setLastName("Doe");
-        dto.setAddress("Av Peru 123");
-        dto.setBirthdate(LocalDate.of(2000, 1, 1));
-        dto.setPhotoUrl("http://photo.com/img.jpg");
-        dto.setUsername("johndoe");
-        dto.setEmail("john@mail.com");
-        dto.setPassword("123456");
-
-        return dto;
+        return RegisterRequestDto.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .address("Av Peru 123")
+                .birthdate(LocalDate.of(2000, 1, 1))
+                .photoUrl("http://photo.com/img.jpg")
+                .username("johndoe")
+                .email("john@mail.com")
+                .password("123456")
+                .build();
     }
 }

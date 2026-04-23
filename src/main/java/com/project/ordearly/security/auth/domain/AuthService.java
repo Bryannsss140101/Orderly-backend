@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.ordearly.exceptions.DuplicateResourceException;
 import com.project.ordearly.exceptions.UnauthorizedException;
 import com.project.ordearly.security.auth.dto.AuthResponseDto;
 import com.project.ordearly.security.auth.dto.LoginRequestDto;
@@ -29,6 +30,11 @@ public class AuthService {
 
     @Transactional
     public AuthResponseDto register(RegisterRequestDto requestDto) {
+        if (userRepository.existsByUsername(requestDto.getUsername()))
+            throw new DuplicateResourceException("Username already exists");
+
+        if (userRepository.existsByEmail(requestDto.getEmail()))
+            throw new DuplicateResourceException("Email already exists");
 
         var user = User.builder()
                 .firstName(requestDto.getFirstName())

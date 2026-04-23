@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.util.HtmlUtils;
 
+import com.project.ordearly.exceptions.DuplicateResourceException;
 import com.project.ordearly.exceptions.ErrorResponse;
 import com.project.ordearly.exceptions.UnauthorizedException;
 
@@ -25,6 +26,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(
             UnauthorizedException ex, HttpServletRequest request) {
         var status = HttpStatus.UNAUTHORIZED;
+
+        var error = ErrorResponse.builder()
+                .status(status.value())
+                .error(status.getReasonPhrase())
+                .message(sanitizeMessage(ex.getMessage()))
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateResourceException(
+            DuplicateResourceException ex, HttpServletRequest request) {
+        var status = HttpStatus.CONFLICT;
 
         var error = ErrorResponse.builder()
                 .status(status.value())

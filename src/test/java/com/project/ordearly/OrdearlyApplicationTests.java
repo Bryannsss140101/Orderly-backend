@@ -4,9 +4,9 @@ import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OrdearlyApplicationTests {
+public class OrdearlyApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 }

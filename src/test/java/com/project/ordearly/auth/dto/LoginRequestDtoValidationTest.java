@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.project.ordearly.security.auth.dto.LoginRequestDto;
@@ -15,7 +15,7 @@ import jakarta.validation.Validator;
 public class LoginRequestDtoValidationTest {
     private Validator validator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         var localValidatorFactoryBean = new LocalValidatorFactoryBean();
         localValidatorFactoryBean.afterPropertiesSet();
@@ -48,10 +48,9 @@ public class LoginRequestDtoValidationTest {
     }
 
     private LoginRequestDto createValidDto() {
-        var dto = new LoginRequestDto();
-        dto.setUsernameOrEmail("john@mail.com");
-        dto.setPassword("123456");
-
-        return dto;
+        return LoginRequestDto.builder()
+                .usernameOrEmail("john@mail.com")
+                .password("123456")
+                .build();
     }
 }
