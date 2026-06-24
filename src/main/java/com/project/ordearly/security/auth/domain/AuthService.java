@@ -37,11 +37,6 @@ public class AuthService {
             throw new DuplicateResourceException("Email already exists");
 
         var user = User.builder()
-                .firstName(requestDto.getFirstName())
-                .lastName(requestDto.getLastName())
-                .address(requestDto.getAddress())
-                .birthdate(requestDto.getBirthdate())
-                .photoUrl(requestDto.getPhotoUrl())
                 .role(Role.EMPLOYEE)
                 .username(requestDto.getUsername())
                 .email(requestDto.getEmail())
@@ -68,14 +63,12 @@ public class AuthService {
 
     private AuthResponseDto buildAuthResponse(User user) {
         var token = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
 
         return AuthResponseDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .role(user.getRole().toString())
                 .accessToken(token)
-                .refreshToken(refreshToken)
                 .build();
     }
 }

@@ -3,7 +3,6 @@ package com.project.ordearly.user.infrastructure;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
@@ -51,10 +50,6 @@ public class UserRepositoryTest {
 
     private User createValidUser() {
         return User.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .address("Street 123")
-                .birthdate(LocalDate.of(2000, 1, 1))
                 .role(Role.ADMIN)
                 .username("john123")
                 .email("john@mail.com")

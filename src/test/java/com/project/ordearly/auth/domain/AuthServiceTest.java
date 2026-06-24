@@ -9,7 +9,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -59,11 +58,6 @@ public class AuthServiceTest {
         public void setUp() {
                 validUser = User.builder()
                                 .id(1L)
-                                .firstName("John")
-                                .lastName("Doe")
-                                .address("Av Peru 123")
-                                .birthdate(LocalDate.of(2000, 1, 1))
-                                .photoUrl("http://photo.com/img.jpg")
                                 .role(Role.EMPLOYEE)
                                 .username("johndoe")
                                 .email("john@mail.com")
@@ -73,11 +67,6 @@ public class AuthServiceTest {
                                 .build();
 
                 validRegisterRequestDto = RegisterRequestDto.builder()
-                                .firstName("John")
-                                .lastName("Doe")
-                                .address("Av Peru 123")
-                                .birthdate(LocalDate.of(2000, 1, 1))
-                                .photoUrl("http://photo.com/img.jpg")
                                 .username("johndoe")
                                 .email("john@mail.com")
                                 .password("123456")
@@ -133,14 +122,10 @@ public class AuthServiceTest {
                 when(jwtService.generateToken(any(User.class)))
                                 .thenReturn("token");
 
-                when(jwtService.generateRefreshToken(any(User.class)))
-                                .thenReturn("refreshToken");
-
                 var response = authService.register(validRegisterRequestDto);
 
                 assertNotNull(response);
                 assertNotNull(response.getAccessToken());
-                assertNotNull(response.getRefreshToken());
                 assertEquals(validRegisterRequestDto.getUsername(), response.getUsername());
                 assertEquals("EMPLOYEE", response.getRole());
 
@@ -161,14 +146,10 @@ public class AuthServiceTest {
                 when(jwtService.generateToken(validUser))
                                 .thenReturn("token");
 
-                when(jwtService.generateRefreshToken(validUser))
-                                .thenReturn("refreshToken");
-
                 var response = authService.login(validLoginRequestDto);
 
                 assertNotNull(response);
                 assertNotNull(response.getAccessToken());
-                assertNotNull(response.getRefreshToken());
                 assertEquals(validRegisterRequestDto.getUsername(), response.getUsername());
                 assertEquals("EMPLOYEE", response.getRole());
 

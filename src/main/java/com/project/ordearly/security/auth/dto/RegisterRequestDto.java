@@ -21,26 +21,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequestDto {
-    @JsonProperty("first_name")
-    @NotBlank
-    @Size(min = 2, max = 100)
-    private String firstName;
-
-    @JsonProperty("last_name")
-    @NotBlank
-    @Size(min = 2, max = 100)
-    private String lastName;
-
-    @NotBlank
-    private String address;
-
-    @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthdate;
-
-    @JsonProperty("photo_url")
-    private String photoUrl;
-
     @NotBlank
     @Size(min = 4, max = 30)
     private String username;

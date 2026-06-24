@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -24,32 +25,28 @@ public class JwtService {
     @Value("${jwt.expiration-access}")
     private Long accessTokenExpiration;
 
-    @Value("${jwt.expiration-refresh}")
-    private Long refreshTokenExpiration;
-
     public String generateToken(UserDetails userDetails) {
         var claims = new HashMap<String, Object>();
 
-        claims.put("roles", userDetails.getAuthorities().stream()
-                .map(role -> {
-                    var auth = role.getAuthority();
-                    return auth.startsWith("ROLE_") ? auth : "ROLE_" + auth;
-                }).toList());
-
-        claims.put("type", "access");
+        claims.put("roles", userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
 
         if (userDetails instanceof CustomUserDetails customUserDetails)
             claims.put("userId", customUserDetails.getId());
 
-        return buildToken(claims, userDetails, accessTokenExpiration);
+        return Jwts.builder()
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .signWith(getSignKey())
+                .compact();
     }
 
-    public String generateRefreshToken(UserDetails userDetails) {
-        var claims = new HashMap<String, Object>();
-
-        claims.put("type", "refresh");
-
-        return buildToken(claims, userDetails, refreshTokenExpiration);
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -57,27 +54,14 @@ public class JwtService {
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
+    private boolean isTokenExpired(String token) {
+        return extractAllClaims(token)
+                .getExpiration()
+                .before(new Date());
+    }
+
     public boolean isAccessToken(String token) {
         return "access".equals(extractAllClaims(token).get("type", String.class));
-    }
-
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
-    }
-
-    private String buildToken(Map<String, Object> claims, UserDetails userDetails, long expiration) {
-        return Jwts.builder()
-                .claims(claims)
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignKey())
-                .compact();
-    }
-
-    private SecretKey getSignKey() {
-        var keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     private Claims extractAllClaims(String token) {
@@ -88,7 +72,8 @@ public class JwtService {
                 .getPayload();
     }
 
-    private boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
+    private SecretKey getSignKey() {
+        var keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

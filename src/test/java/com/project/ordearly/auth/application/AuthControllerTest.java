@@ -58,11 +58,6 @@ public class AuthControllerTest {
         @BeforeEach
         public void setUp() {
                 validRegisterRequestDto = RegisterRequestDto.builder()
-                                .firstName("John")
-                                .lastName("Doe")
-                                .address("Av Peru 123")
-                                .birthdate(LocalDate.of(2000, 1, 1))
-                                .photoUrl("http://photo.com/img.jpg")
                                 .username("johndoe")
                                 .email("john@mail.com")
                                 .password("123456")
@@ -78,7 +73,6 @@ public class AuthControllerTest {
                                 .username("johndoe")
                                 .role("EMPLOYEE")
                                 .accessToken("access-jwt")
-                                .refreshToken("refresh-jwt")
                                 .build();
         }
 
