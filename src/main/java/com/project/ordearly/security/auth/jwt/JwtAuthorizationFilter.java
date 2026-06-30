@@ -49,7 +49,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     UserDetails user = userDetailsService.loadUserByUsername(username);
 
                     // Validar token contra el usuario
-                    if (jwtService.isTokenValid(token, user) && jwtService.isAccessToken(token)) {
+                    if (jwtService.isTokenValid(token, user)) {
 
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                 user,

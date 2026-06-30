@@ -2,7 +2,6 @@ package com.project.ordearly.security.auth.jwt;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -58,10 +57,6 @@ public class JwtService {
         return extractAllClaims(token)
                 .getExpiration()
                 .before(new Date());
-    }
-
-    public boolean isAccessToken(String token) {
-        return "access".equals(extractAllClaims(token).get("type", String.class));
     }
 
     private Claims extractAllClaims(String token) {

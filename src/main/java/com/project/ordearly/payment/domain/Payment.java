@@ -1,11 +1,13 @@
-package com.project.ordearly.security.auth.domain;
+package com.project.ordearly.payment.domain;
 
-import java.time.ZonedDateTime;
+import java.math.BigDecimal;
 
-import com.project.ordearly.user.domain.User;
+import com.project.ordearly.order.domain.Order;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,29 +21,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Builder
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "password_reset_token")
-public class PasswordResetToken {
+@Table(name = "payments")
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String token;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
-    @Column(name = "expires_at", nullable = false)
-    private ZonedDateTime expiresAt;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private PaymentMethod method;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean used = false;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal amount;
 }
