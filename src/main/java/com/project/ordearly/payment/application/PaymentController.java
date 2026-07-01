@@ -44,7 +44,7 @@ public class PaymentController {
     }
 
     @DeleteMapping("/{paymentId}")
-    public ResponseEntity<Void> eliminarPago(
+    public ResponseEntity<Void> deletePayment(
             @PathVariable Long orderId,
             @PathVariable Long paymentId) {
 

@@ -15,5 +15,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findByTypeAndTableNumberAndStatus(
             OrderType type, Integer tableNumber, OrderStatus status);
 
-    Optional<Order> findByStatus(OrderStatus status);
+    List<Order> findByStatus(OrderStatus status);
 }
