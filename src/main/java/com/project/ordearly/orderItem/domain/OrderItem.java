@@ -43,12 +43,15 @@ public class OrderItem {
     @Column(nullable = false, length = 120)
     private String name;
 
+    @Builder.Default
     @Column(nullable = false)
-    private Integer quantity;
+    private Integer quantity = 0;
 
+    @Builder.Default
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice;
+    private BigDecimal unitPrice = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal subtotal;
+    private BigDecimal subtotal = BigDecimal.ZERO;
 }
